@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.app.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .flash-messages {
+            padding: 0;
+        }
+
+        .flash {
+            padding: 15px;
+            margin: 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .flash.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .add-todo {
+            padding: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .add-todo form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-todo input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .add-todo input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-todo button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .add-todo button:hover {
+            transform: translateY(-2px);
+        }
+
+        .todo-list {
+            padding: 20px 30px 30px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .todo-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            margin: 0 15px;
+            word-break: break-word;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-toggle:hover {
+            background-color: #218838;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            background: white;
+            position: relative;
+        }
+
+        .checkbox.checked {
+            background: #667eea;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 {{ config.app.name }}</h1>
+            <p>Stay organized and productive</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="add-todo">
+            <form action="{{ url_for('add_todo') }}" method="POST">
+                <input 
+                    type="text" 
+                    name="task" 
+                    placeholder="Add a new task..." 
+                    maxlength="{{ config.settings.max_todo_length }}"
+                    required
+                >
+                <button type="submit">Add</button>
+            </form>
+        </div>
+
+        <div class="todo-list">
+            {% if todos %}
+                {% for todo in todos %}
+                    <div class="todo-item {% if todo.completed %}completed{% endif %}">
+                        <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}" style="text-decoration: none;">
+                            <div class="checkbox {% if todo.completed %}checked{% endif %}"></div>
+                        </a>
+                        <div class="todo-text">{{ todo.task }}</div>
+                        <div class="todo-actions">
+                            <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}" class="btn btn-toggle">
+                                {% if todo.completed %}Undo{% else %}Done{% endif %}
+                            </a>
+                            <a href="{{ url_for('delete_todo', todo_id=todo.id) }}" class="btn btn-delete">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <p>No tasks yet. Add one to get started!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
