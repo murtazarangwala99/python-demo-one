@@ -9,7 +9,6 @@ A simple and elegant TODO application built with Flask and configured using TOML
 ```
 .
 ├── app.py                 # Main Flask application
-├── config.toml           # Configuration file
 ├── requirements.txt      # Python dependencies
 ├── templates/
 │   └── index.html        # HTML template
