@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config.app.name }}</title>
+    <title>Flask TODO App</title>
+
     <style>
         * {
             margin: 0;
@@ -210,60 +211,69 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📝 {{ config.app.name }}</h1>
-            <p>Stay organized and productive</p>
-        </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+<div class="container">
 
-        <div class="add-todo">
-            <form action="{{ url_for('add_todo') }}" method="POST">
-                <input 
-                    type="text" 
-                    name="task" 
-                    placeholder="Add a new task..." 
-                    maxlength="{{ config.settings.max_todo_length }}"
-                    required
-                >
-                <button type="submit">Add</button>
-            </form>
-        </div>
-
-        <div class="todo-list">
-            {% if todos %}
-                {% for todo in todos %}
-                    <div class="todo-item {% if todo.completed %}completed{% endif %}">
-                        <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}" style="text-decoration: none;">
-                            <div class="checkbox {% if todo.completed %}checked{% endif %}"></div>
-                        </a>
-                        <div class="todo-text">{{ todo.task }}</div>
-                        <div class="todo-actions">
-                            <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}" class="btn btn-toggle">
-                                {% if todo.completed %}Undo{% else %}Done{% endif %}
-                            </a>
-                            <a href="{{ url_for('delete_todo', todo_id=todo.id) }}" class="btn btn-delete">Delete</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    <p>No tasks yet. Add one to get started!</p>
-                </div>
-            {% endif %}
-        </div>
+    <div class="header">
+        <h1>Flask TODO App</h1>
+        <p>Stay organized and productive</p>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="add-todo">
+        <form method="POST">
+            <input
+                type="text"
+                name="task"
+                placeholder="Add a new task..."
+                maxlength="200"
+                required
+            >
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <div class="todo-list">
+        {% if todos %}
+            {% for todo in todos %}
+                <div class="todo-item {% if todo.completed %}completed{% endif %}">
+                    <a href="{{ url_for('complete', todo_id=todo.id) }}" style="text-decoration:none;">
+                        <div class="checkbox {% if todo.completed %}checked{% endif %}"></div>
+                    </a>
+
+                    <div class="todo-text">{{ todo.task }}</div>
+
+                    <div class="todo-actions">
+                        <a href="{{ url_for('complete', todo_id=todo.id) }}" class="btn btn-toggle">
+                            {% if todo.completed %}Undo{% else %}Done{% endif %}
+                        </a>
+                        <a href="{{ url_for('delete', todo_id=todo.id) }}" class="btn btn-delete">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <p>No tasks yet. Add one to get started!</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
 </body>
 </html>

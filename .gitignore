@@ -1,55 +1,10 @@
-# =========================
-# Python bytecode
-# =========================
 __pycache__/
 *.py[cod]
 
-# =========================
-# Virtual environments
-# =========================
 venv/
 .venv/
-env/
 
-# =========================
-# Build / packaging
-# =========================
-build/
-dist/
-*.egg-info/
-.eggs/
+todos.db
 
-# =========================
-# Testing / coverage
-# =========================
-.pytest_cache/
-.coverage
-coverage.xml
-htmlcov/
-
-# =========================
-# Logs
-# =========================
-*.log
-
-# =========================
-# Tool caches
-# =========================
-.mypy_cache/
-.ruff_cache/
-.tox/
-.nox/
-
-# =========================
-# Environment / secrets
-# =========================
 .env
 .env.*
-
-# =========================
-# IDE / OS files
-# =========================
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
