@@ -2,13 +2,7 @@
 
 A simple and elegant TODO application built with Flask and configured using TOML.
 
-## Features
-
-- ✅ Add, complete, and delete tasks
-- 📝 Configuration via TOML file
-- 💾 SQLite database for persistent storage
-- 🎨 Modern, responsive UI
-- ⚡ Flash messages for user feedback
+## Add, complete, and delete tasks
 
 ## Project Structure
 
@@ -22,29 +16,13 @@ A simple and elegant TODO application built with Flask and configured using TOML
 └── todos.db              # SQLite database (created automatically)
 ```
 
-## Configuration (config.toml)
+## Setup (Recommended)
 
-The application is configured using a TOML file with the following options:
-
-- **[app]**: Application settings (name, debug, host, port)
-- **[database]**: Database filename
-- **[settings]**: Application behavior (max task length, pagination)
-
-## Installation
-
-1. Install the required dependencies:
-```bash
+```
+python -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-
-2. Run the application:
-```bash
 python app.py
-```
-
-3. Open your browser and navigate to:
-```
-http://localhost:5000
 ```
 
 ## Usage
@@ -53,16 +31,6 @@ http://localhost:5000
 - **Complete a task**: Click the "Done" button or the checkbox
 - **Delete a task**: Click the "Delete" button
 - **Undo completion**: Click "Undo" on completed tasks
-
-## Configuration Options
-
-Edit `config.toml` to customize:
-
-- `debug`: Enable/disable debug mode
-- `host`: Server host (default: 0.0.0.0)
-- `port`: Server port (default: 5000)
-- `max_todo_length`: Maximum characters per task (default: 200)
-- `items_per_page`: Number of items per page (default: 10)
 
 ## Requirements
 
